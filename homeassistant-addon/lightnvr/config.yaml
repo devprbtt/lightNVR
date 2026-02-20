@@ -7,6 +7,10 @@ arch:
   - amd64
   - aarch64
   - armv7
+build_from:
+  amd64: ghcr.io/opensensor/lightnvr:latest
+  aarch64: ghcr.io/opensensor/lightnvr:latest
+  armv7: ghcr.io/opensensor/lightnvr:latest
 startup: services
 boot: auto
 init: false
