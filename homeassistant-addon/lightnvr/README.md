@@ -18,11 +18,16 @@ This add-on runs LightNVR inside Home Assistant OS as a custom add-on.
 
 ## Access
 
-- Web UI: `http://<home-assistant-ip>:8080`
-- go2rtc API: `http://<home-assistant-ip>:1984`
+This add-on defaults to UniFi-safe host ports:
+
+- Web UI: `http://<home-assistant-ip>:18080`
+- go2rtc API: `http://<home-assistant-ip>:11984`
+- RTSP: `rtsp://<home-assistant-ip>:18554/...`
+- WebRTC: `http://<home-assistant-ip>:18555/...`
 
 ## Notes
 
 - Main config is persisted at `/data/lightnvr-config/lightnvr.ini` inside the add-on container.
 - Recordings/database/models are persisted under `/data/lightnvr-data`.
 - Configure MQTT in `lightnvr.ini` to integrate with Home Assistant automations.
+- On first boot, default ports are migrated once and then left under your control.
