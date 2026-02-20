@@ -1,5 +1,4 @@
-ARG BUILD_FROM=ghcr.io/opensensor/lightnvr:latest
-FROM ${BUILD_FROM}
+FROM ghcr.io/opensensor/lightnvr:latest
 
 COPY rootfs/ /
 RUN chmod +x /usr/local/bin/lightnvr-ha-run.sh
