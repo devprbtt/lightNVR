@@ -46,8 +46,10 @@ path = /data/lightnvr-data/models
 
 [go2rtc]
 binary_path = /bin/go2rtc
-config_dir = /data/lightnvr-config/go2rtc
+config_dir = /etc/lightnvr/go2rtc
 api_port = 11984
+rtsp_port = 28554
+webrtc_listen_port = 18555
 
 [mqtt]
 enabled = false
