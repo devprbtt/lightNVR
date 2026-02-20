@@ -1,0 +1,18 @@
+name: LightNVR
+version: "0.1.0"
+slug: lightnvr
+description: Lightweight Network Video Recorder (NVR)
+url: https://github.com/opensensor/lightnvr
+arch:
+  - amd64
+  - aarch64
+  - armv7
+startup: services
+boot: auto
+init: false
+host_network: true
+map:
+  - addon_config:rw
+  - media:rw
+options: {}
+schema: {}
