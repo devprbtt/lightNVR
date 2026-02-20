@@ -21,4 +21,44 @@ if [ ! -f "${PATCH_MARKER}" ]; then
     touch "${PATCH_MARKER}" || true
 fi
 
-exec /bin/start.sh
+if [ -x /bin/start.sh ]; then
+    exec /bin/start.sh
+fi
+
+GO2RTC_BIN=""
+if [ -x /bin/go2rtc ]; then
+    GO2RTC_BIN="/bin/go2rtc"
+elif command -v go2rtc >/dev/null 2>&1; then
+    GO2RTC_BIN="$(command -v go2rtc)"
+fi
+
+LIGHTNVR_BIN=""
+if [ -x /bin/lightnvr ]; then
+    LIGHTNVR_BIN="/bin/lightnvr"
+elif command -v lightnvr >/dev/null 2>&1; then
+    LIGHTNVR_BIN="$(command -v lightnvr)"
+fi
+
+if [ -n "${GO2RTC_BIN}" ]; then
+    "${GO2RTC_BIN}" --config /etc/lightnvr/go2rtc/go2rtc.yaml &
+    GO2RTC_PID=$!
+else
+    GO2RTC_PID=""
+fi
+
+cleanup() {
+    if [ -n "${GO2RTC_PID}" ]; then
+        kill "${GO2RTC_PID}" 2>/dev/null || true
+        wait "${GO2RTC_PID}" 2>/dev/null || true
+    fi
+}
+trap cleanup EXIT INT TERM
+
+sleep 2
+
+if [ -z "${LIGHTNVR_BIN}" ]; then
+    echo "lightnvr binary not found in image (expected /bin/lightnvr or PATH)"
+    exit 127
+fi
+
+exec "${LIGHTNVR_BIN}" -c /etc/lightnvr/lightnvr.ini
