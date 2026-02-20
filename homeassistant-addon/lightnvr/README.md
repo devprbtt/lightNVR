@@ -22,7 +22,7 @@ This add-on defaults to UniFi-safe host ports:
 
 - Web UI: `http://<home-assistant-ip>:18080`
 - go2rtc API: `http://<home-assistant-ip>:11984`
-- RTSP: `rtsp://<home-assistant-ip>:18554/...`
+- RTSP: `rtsp://<home-assistant-ip>:28554/...`
 - WebRTC: `http://<home-assistant-ip>:18555/...`
 
 ## Notes

@@ -71,7 +71,7 @@ api:
   base_path: /go2rtc
 
 rtsp:
-  listen: :18554
+  listen: :28554
 
 webrtc:
   listen: :18555

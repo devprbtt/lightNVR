@@ -1,7 +1,7 @@
 #!/bin/sh
 set -e
 
-PATCH_MARKER="/data/.lightnvr-ha-ports-patched-v1"
+PATCH_MARKER="/data/.lightnvr-ha-ports-patched-v2"
 INI_FILE="/etc/lightnvr/lightnvr.ini"
 GO2RTC_FILE="/etc/lightnvr/go2rtc/go2rtc.yaml"
 
@@ -14,7 +14,8 @@ if [ ! -f "${PATCH_MARKER}" ]; then
 
     if [ -f "${GO2RTC_FILE}" ]; then
         sed -i 's/:1984/:11984/g' "${GO2RTC_FILE}" || true
-        sed -i 's/:8554/:18554/g' "${GO2RTC_FILE}" || true
+        sed -i 's/:8554/:28554/g' "${GO2RTC_FILE}" || true
+        sed -i 's/:18554/:28554/g' "${GO2RTC_FILE}" || true
         sed -i 's/:8555/:18555/g' "${GO2RTC_FILE}" || true
     fi
 
