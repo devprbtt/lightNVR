@@ -1,5 +1,5 @@
 name: LightNVR
-version: "0.1.0"
+version: "0.1.2"
 slug: lightnvr
 description: Lightweight Network Video Recorder (NVR)
 url: https://github.com/opensensor/lightnvr

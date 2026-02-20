@@ -7,21 +7,15 @@ PERSIST_DATA_DIR="${PERSIST_ROOT}/lightnvr-data"
 
 mkdir -p "${PERSIST_CONFIG_DIR}" "${PERSIST_DATA_DIR}" "${PERSIST_DATA_DIR}/recordings" "${PERSIST_DATA_DIR}/database" "${PERSIST_DATA_DIR}/models"
 mkdir -p /etc /var/lib/lightnvr
+mkdir -p /etc/lightnvr /etc/lightnvr/go2rtc
 
-# Seed persistent config/data from image defaults only once.
-if [ ! -f "${PERSIST_CONFIG_DIR}/lightnvr.ini" ] && [ -d "/etc/lightnvr" ]; then
+# Seed persistent config from image defaults only once.
+if [ ! -f "${PERSIST_CONFIG_DIR}/lightnvr.ini" ] && [ -f "/etc/lightnvr/lightnvr.ini" ]; then
     cp -a /etc/lightnvr/. "${PERSIST_CONFIG_DIR}/" 2>/dev/null || true
 fi
 
-if [ -z "$(ls -A "${PERSIST_DATA_DIR}" 2>/dev/null)" ] && [ -d "/var/lib/lightnvr/data" ]; then
-    cp -a /var/lib/lightnvr/data/. "${PERSIST_DATA_DIR}/" 2>/dev/null || true
-fi
-
-rm -rf /etc/lightnvr
-ln -s "${PERSIST_CONFIG_DIR}" /etc/lightnvr
-
-rm -rf /var/lib/lightnvr/data
-ln -s "${PERSIST_DATA_DIR}" /var/lib/lightnvr/data
+# Keep runtime config in /etc, sourced from persisted /data.
+cp -a "${PERSIST_CONFIG_DIR}/." /etc/lightnvr/ 2>/dev/null || true
 
 # Create minimal defaults if upstream image/config seeding did not provide them.
 if [ ! -f /etc/lightnvr/lightnvr.ini ]; then
@@ -32,12 +26,12 @@ log_file = /var/log/lightnvr/lightnvr.log
 log_level = 2
 
 [storage]
-path = /var/lib/lightnvr/data/recordings
+path = /data/lightnvr-data/recordings
 record_mp4_directly = false
-mp4_path = /var/lib/lightnvr/data/recordings/mp4
+mp4_path = /data/lightnvr-data/recordings/mp4
 
 [database]
-path = /var/lib/lightnvr/data/database/lightnvr.db
+path = /data/lightnvr-data/database/lightnvr.db
 
 [web]
 port = 18080
@@ -48,11 +42,11 @@ password = admin
 web_thread_pool_size = 8
 
 [models]
-path = /var/lib/lightnvr/data/models
+path = /data/lightnvr-data/models
 
 [go2rtc]
 binary_path = /bin/go2rtc
-config_dir = /etc/lightnvr/go2rtc
+config_dir = /data/lightnvr-config/go2rtc
 api_port = 11984
 
 [mqtt]
@@ -68,9 +62,9 @@ retain = false
 EOF
 fi
 
-mkdir -p /etc/lightnvr/go2rtc
-if [ ! -f /etc/lightnvr/go2rtc/go2rtc.yaml ]; then
-    cat > /etc/lightnvr/go2rtc/go2rtc.yaml << 'EOF'
+mkdir -p "${PERSIST_CONFIG_DIR}/go2rtc" /etc/lightnvr/go2rtc
+if [ ! -f "${PERSIST_CONFIG_DIR}/go2rtc/go2rtc.yaml" ]; then
+    cat > "${PERSIST_CONFIG_DIR}/go2rtc/go2rtc.yaml" << 'EOF'
 api:
   listen: :11984
   origin: "*"
@@ -93,6 +87,11 @@ log:
 streams:
 EOF
 fi
+
+cp -a "${PERSIST_CONFIG_DIR}/go2rtc/." /etc/lightnvr/go2rtc/ 2>/dev/null || true
+
+# Persist generated defaults back to /data.
+cp -a /etc/lightnvr/. "${PERSIST_CONFIG_DIR}/" 2>/dev/null || true
 
 # Prefer upstream init flow when available; otherwise run command directly.
 if [ -x /usr/local/bin/docker-entrypoint.sh ]; then
