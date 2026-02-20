@@ -6,6 +6,7 @@ PERSIST_CONFIG_DIR="${PERSIST_ROOT}/lightnvr-config"
 PERSIST_DATA_DIR="${PERSIST_ROOT}/lightnvr-data"
 
 mkdir -p "${PERSIST_CONFIG_DIR}" "${PERSIST_DATA_DIR}" "${PERSIST_DATA_DIR}/recordings" "${PERSIST_DATA_DIR}/database" "${PERSIST_DATA_DIR}/models"
+mkdir -p /etc /var/lib/lightnvr
 
 # Seed persistent config/data from image defaults only once.
 if [ ! -f "${PERSIST_CONFIG_DIR}/lightnvr.ini" ] && [ -d "/etc/lightnvr" ]; then
